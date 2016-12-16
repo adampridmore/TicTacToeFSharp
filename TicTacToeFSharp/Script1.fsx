@@ -1,26 +1,12 @@
 ﻿type Cell = Empty | X | O
+
 type Game = {
     Cells : Cell array array 
 }
 
-let emptyGame = 
+let newGame = 
     {
         Cells = Array.create 3 (Array.create 3 Empty)
-    }
-    
-let playMove (x,y) (move: Cell) (game:Game) =
-    let playMoveRow x (row : Cell array) = 
-        row 
-        |> Array.mapi (fun columnIndex cell -> if columnIndex = y then move else cell)
-
-    let cells =     
-        game.Cells 
-        |> Array.mapi (fun rowIndex row -> match rowIndex with 
-                                           | rowIndex when rowIndex = y -> game.Cells.[rowIndex] |> playMoveRow x 
-                                           | _ -> game.Cells.[rowIndex])
-
-    {
-        Cells = cells
     }
 
 let gameToString (game:Game) =
@@ -37,15 +23,37 @@ let gameToString (game:Game) =
     
     game.Cells 
     |> Seq.map rowToString
-    |> Seq.reduce (sprintf "%s\r\n%s")
+    |> String.concat "\r\n"
 
 let printGame = gameToString >> (printfn "%s")
 
-//emptyGame |> gameToString |> 
+let playMove (x,y) (moveToPlay: Cell) (game:Game) =
+    let isLegalMove = game.Cells.[y].[x] = Cell.Empty
 
-emptyGame 
-|> playMove (0,0) X 
-|> playMove (1,1) O 
-|> playMove (2,2) X 
-|> printGame
+    if not isLegalMove 
+    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  moveToPlay x y (game |> gameToString) )
+    else 
+        let playMoveRow x (row : Cell array) = 
+            row 
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = y then moveToPlay
+                                                   else cell)
 
+        let cells =     
+            game.Cells 
+            |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow x 
+                                               else row)
+
+        {
+            Cells = cells
+        }
+
+let playMoveAndPrint (x,y) moveToPlay game = 
+    printfn "Played %A at %d,%d" moveToPlay x y
+    let next = playMove (x,y) moveToPlay game
+    next |> printGame
+    next
+    
+newGame 
+|> playMoveAndPrint (0,0) X 
+|> playMoveAndPrint (1,1) O 
+|> playMoveAndPrint (2,2) X 
