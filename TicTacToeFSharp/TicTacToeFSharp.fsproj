@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="Tictactoe.fs" />
     <Compile Include="Program.fs" />
     <None Include="Script1.fsx" />
     <None Include="App.config" />
