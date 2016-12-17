@@ -65,4 +65,25 @@ let playMoveAndPrint (x,y) moveToPlay game =
     next |> printGame
     next
 
+let won (cells: Cell array array) = 
+    let rowsPicker = 
+        seq{0..2} |> Seq.map (fun i -> cells.[0].[i],cells.[1].[i],cells.[2].[i])
+        
+    let columnsPicker = 
+        seq{0..2} |> Seq.map (fun i -> cells.[i].[0],cells.[i].[1],cells.[i].[2])
+    
+    let diagPicker = 
+        seq{
+            yield (cells.[0].[0], cells.[1].[1], cells.[2].[2])
+            yield (cells.[0].[2], cells.[1].[1], cells.[2].[0])
+        }
+
+    let areThreeCellsWin (cells : seq<Cell*Cell*Cell>) = 
+        cells
+        |> Seq.where (fun (a,_, _) -> a <> Empty)
+        |> Seq.exists (fun (a,b,c) -> a = b && a = c)
+
+    Seq.concat [ rowsPicker;columnsPicker;diagPicker ] |> areThreeCellsWin
+
+
 
