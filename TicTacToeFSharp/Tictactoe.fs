@@ -6,7 +6,7 @@ type GameState = InProgress | XWon | OWon
 
 type Game = {
     Cells : Cell array array;
-    State : GameState 
+    State : GameState;
 }
 
 let emptyCells = Array.create 3 (Array.create 3 Empty);
@@ -46,14 +46,14 @@ let playMove (x,y) (moveToPlay: Cell) (game:Game) =
     if not isLegalMove 
     then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  moveToPlay x y (game |> gameToString) )
     else 
-        let playMoveRow x (row : Cell array) = 
+        let playMoveRow (row : Cell array) = 
             row 
-            |> Array.mapi (fun columnIndex cell -> if columnIndex = y then moveToPlay
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then moveToPlay
                                                    else cell)
 
         let cells =     
             game.Cells 
-            |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow x 
+            |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow
                                                else row)
 
         {

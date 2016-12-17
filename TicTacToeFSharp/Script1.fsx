@@ -2,35 +2,34 @@
 
 open Tictactoe
 
+let parseCharToInt32 (c:char) = 
+    c.ToString() |> System.Int32.Parse
+
+let readMove() = 
+    let lineChar = System.Console.ReadLine().ToCharArray()
+    let x = lineChar.[0] |> parseCharToInt32
+    let y = lineChar.[2] |> parseCharToInt32
+    x,y
+
+let humanMoveAndPrint game = 
+    game |> printGame
+    let move = readMove()
+
+    printfn "Move: %A" move
+
+    playMove move Cell.X game
+
+Seq.unfold (fun state -> 
+    let nextState = state |> humanMoveAndPrint; 
+    Some(nextState,nextState) ) newGame
+|> Seq.takeWhile (fun game -> game.State = GameState.InProgress)
+|> Seq.iter (ignore)
+
+
 //newGame 
+////|> humanMoveAndPrint
 //|> playMoveAndPrint (0,0) X 
 //|> playMoveAndPrint (1,1) O 
 //|> playMoveAndPrint (2,2) X 
 //|> ignore
-
-//let rowWin = 
-//    [| 
-//        [| X; X; X |]
-//        [| Empty; Empty; Empty |]
-//        [| Empty; Empty; Empty |] 
-//    |]
-//
-//let columnWin = 
-//    [| 
-//        [| Empty; Empty; O|]
-//        [| Empty; Empty; O|]
-//        [| Empty; Empty; O|] 
-//    |]
-//    
-//let diagWin = 
-//    [| 
-//        [| Empty; Empty; O|]
-//        [| Empty; O; Empty|]
-//        [| O; Empty; Empty|] 
-//    |]
-//
-//rowWin |> won
-//columnWin |> won
-//diagWin |> won
-//newGame.Cells |> won
 
