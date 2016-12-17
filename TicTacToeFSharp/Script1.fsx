@@ -17,19 +17,25 @@ let humanMoveAndPrint game =
 
     printfn "Move: %A" move
 
-    playMove move Token.X game
+    playMove move game
 
-Seq.unfold (fun state -> 
-    let nextState = state |> humanMoveAndPrint; 
-    Some(nextState,nextState) ) newGame
-|> Seq.takeWhile (fun game -> game.State = GameState.InProgress)
-|> Seq.iter (ignore)
+let endGame = 
+    Seq.unfold (fun state -> 
+        let nextState = state |> humanMoveAndPrint; 
+        Some(nextState,nextState) ) newGame
+    // TODO - This doesn't include the last game state...
+    |> Seq.takeWhile (fun game -> game.State = GameState.InProgress)
+    |> Seq.last
 
+printfn "Game Over"
+printfn "Player %s won" (Some(endGame.NextMove |> tokenToggle) |> cellToString)
+endGame |> printGame 
 
 //newGame 
-////|> humanMoveAndPrint
-//|> playMoveAndPrint (0,0) X 
-//|> playMoveAndPrint (1,1) O 
-//|> playMoveAndPrint (2,2) X 
+//////|> humanMoveAndPrint
+//|> playMoveAndPrint (0,0)
+//|> playMoveAndPrint (1,0)
+//|> playMoveAndPrint (1,1)
+//|> playMoveAndPrint (2,2)
 //|> ignore
 

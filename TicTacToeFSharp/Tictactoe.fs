@@ -6,28 +6,32 @@ type Cell = Token Option
 type GameState = InProgress | XWon | OWon
 
 type Game = {
-    Cells : Cell array array;
-    State : GameState;
+    Cells : Cell array array
+    State : GameState
+    NextMove : Token
 }
 
 let emptyCells = Array.create 3 (Array.create 3 None)
+
+let tokenToggle = function | X -> O | O -> X
 
 let newGame = 
     {
         Cells = emptyCells
         State = InProgress
+        NextMove = X
     }
 
-let gameToString (game:Game) =
-    let cellToChar (c:Cell) = 
-        match c with
-        | None -> " "
-        | Some(X) -> "X"
-        | Some(O) -> "O"
+let cellToString (c:Cell) = 
+    match c with
+    | None -> " "
+    | Some(X) -> "X"
+    | Some(O) -> "O"
 
+let gameToString (game:Game) =
     let rowToString (row: Cell array) = 
         row
-        |> Seq.map cellToChar
+        |> Seq.map cellToString
         |> Seq.reduce (+)
     
     let stateText = 
@@ -38,35 +42,6 @@ let gameToString (game:Game) =
 
     [game.State |> stateText ] @ (game.Cells |> Seq.map rowToString |> Seq.toList )
     |> String.concat "\r\n"
-
-let printGame = gameToString >> (printfn "%s")
-
-let playMove (x,y) (moveToPlay: Token) (game:Game) =
-    let isLegalMove = game.Cells.[y].[x] = None
-
-    if not isLegalMove 
-    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  moveToPlay x y (game |> gameToString) )
-    else 
-        let playMoveRow (row : Cell array) : (Cell array) = 
-            row 
-            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Some(moveToPlay)
-                                                   else cell )
-
-        let cells =     
-            game.Cells 
-            |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow
-                                               else row)
-
-        {
-            Cells = cells;
-            State = InProgress
-        }
-
-let playMoveAndPrint (x,y) moveToPlay game = 
-    printfn "Played %A at %d,%d" moveToPlay x y
-    let next = playMove (x,y) moveToPlay game
-    next |> printGame
-    next
 
 let won (cells: Cell array array) = 
     let rowsPicker = 
@@ -88,5 +63,39 @@ let won (cells: Cell array array) =
 
     Seq.concat [ rowsPicker;columnsPicker;diagPicker ] |> areThreeCellsWin
 
+let printGame = gameToString >> (printfn "%s")
 
+let playMove (x,y) (game:Game) =
+    let isLegalMove = game.Cells.[y].[x] = None
 
+    if not isLegalMove 
+    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  game.NextMove x y (game |> gameToString) )
+    else 
+        let playMoveRow (row : Cell array) : (Cell array) = 
+            row 
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Some(game.NextMove)
+                                                   else cell )
+
+        let cells =     
+            game.Cells 
+            |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow
+                                               else row)
+
+        let state = 
+            match (cells |> won) with 
+            | true -> match game.NextMove with 
+                      | X -> XWon
+                      | Y -> OWon
+            | false -> GameState.InProgress
+        
+        {
+            Cells = cells
+            State = state
+            NextMove = game.NextMove |> tokenToggle
+        }
+
+let playMoveAndPrint (x,y) game = 
+    printfn "Played %A at %d,%d" game.NextMove x y
+    let next = playMove (x,y) game
+    next |> printGame
+    next
