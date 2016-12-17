@@ -2,13 +2,17 @@
 
 type Cell = Empty | X | O
 
+type GameState = InProgress | XWon | OWon
+
 type Game = {
-    Cells : Cell array array 
+    Cells : Cell array array;
+    State : GameState 
 }
 
 let newGame = 
     {
-        Cells = Array.create 3 (Array.create 3 Empty)
+        Cells = Array.create 3 (Array.create 3 Empty);
+        State = InProgress
     }
 
 let gameToString (game:Game) =
@@ -23,8 +27,13 @@ let gameToString (game:Game) =
         |> Seq.map cellToChar
         |> Seq.reduce (+)
     
-    game.Cells 
-    |> Seq.map rowToString
+    let stateText = 
+        function 
+        | InProgress -> "In Progress"
+        | XWon -> "X Won"
+        | OWon-> "O Won"
+
+    [game.State |> stateText ] @ (game.Cells |> Seq.map rowToString |> Seq.toList )
     |> String.concat "\r\n"
 
 let printGame = gameToString >> (printfn "%s")
@@ -46,7 +55,8 @@ let playMove (x,y) (moveToPlay: Cell) (game:Game) =
                                                else row)
 
         {
-            Cells = cells
+            Cells = cells;
+            State = InProgress
         }
 
 let playMoveAndPrint (x,y) moveToPlay game = 
