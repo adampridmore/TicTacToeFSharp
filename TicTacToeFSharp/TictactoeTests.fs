@@ -4,36 +4,35 @@ open Tictactoe
 open FsUnit
 open NUnit.Framework
 
+[<Test>]
+let ``row win``() = 
+    [| 
+        [| X; X; X |]
+        [| Cell.Empty; Cell.Empty; Cell.Empty |]
+        [| Cell.Empty; Cell.Empty; Cell.Empty |] 
+    |]
+    |> won |> should equal true
 
 [<Test>]
-let a() = 
-    let rowWin = 
-        [| 
-            [| X; X; X |]
-            [| Cell.Empty; Cell.Empty; Cell.Empty |]
-            [| Cell.Empty; Cell.Empty; Cell.Empty |] 
-        |]
+let ``colum win``() = 
+    [| 
+        [| Cell.Empty; Cell.Empty; O|]
+        [| Cell.Empty; Cell.Empty; O|]
+        [| Cell.Empty; Cell.Empty; O|] 
+    |]
+    |> won |> should equal true
 
-    rowWin |> won |> should equal true
+[<Test>]
+let ``diagonal win``() = 
+    [| 
+        [| Cell.Empty; Cell.Empty; O|]
+        [| Cell.Empty; O; Cell.Empty|]
+        [| O; Cell.Empty; Cell.Empty|] 
+    |]
+    |> won |> should equal true
 
-
-//
-//let columnWin = 
-//    [| 
-//        [| Empty; Empty; O|]
-//        [| Empty; Empty; O|]
-//        [| Empty; Empty; O|] 
-//    |]
-//    
-//let diagWin = 
-//    [| 
-//        [| Empty; Empty; O|]
-//        [| Empty; O; Empty|]
-//        [| O; Empty; Empty|] 
-//    |]
-//
-//rowWin |> won
-//columnWin |> won
-//diagWin |> won
-//newGame.Cells |> won
+[<Test>]
+let ``Empty board is not win``() = 
+    emptyCells
+    |> won |> should equal false
 

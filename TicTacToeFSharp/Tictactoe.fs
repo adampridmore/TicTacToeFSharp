@@ -9,9 +9,11 @@ type Game = {
     State : GameState 
 }
 
+let emptyCells = Array.create 3 (Array.create 3 Empty);
+
 let newGame = 
     {
-        Cells = Array.create 3 (Array.create 3 Empty);
+        Cells = emptyCells
         State = InProgress
     }
 
