@@ -1,6 +1,7 @@
 ﻿module Tictactoe
 
-type Cell = Empty | X | O
+type Token = X | O
+type Cell = Token Option
 
 type GameState = InProgress | XWon | OWon
 
@@ -9,7 +10,7 @@ type Game = {
     State : GameState;
 }
 
-let emptyCells = Array.create 3 (Array.create 3 Empty);
+let emptyCells = Array.create 3 (Array.create 3 None)
 
 let newGame = 
     {
@@ -20,9 +21,9 @@ let newGame =
 let gameToString (game:Game) =
     let cellToChar (c:Cell) = 
         match c with
-        | Empty -> " "
-        | X -> "X"
-        | O -> "O"
+        | None -> " "
+        | Some(X) -> "X"
+        | Some(O) -> "O"
 
     let rowToString (row: Cell array) = 
         row
@@ -40,16 +41,16 @@ let gameToString (game:Game) =
 
 let printGame = gameToString >> (printfn "%s")
 
-let playMove (x,y) (moveToPlay: Cell) (game:Game) =
-    let isLegalMove = game.Cells.[y].[x] = Cell.Empty
+let playMove (x,y) (moveToPlay: Token) (game:Game) =
+    let isLegalMove = game.Cells.[y].[x] = None
 
     if not isLegalMove 
     then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  moveToPlay x y (game |> gameToString) )
     else 
-        let playMoveRow (row : Cell array) = 
+        let playMoveRow (row : Cell array) : (Cell array) = 
             row 
-            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then moveToPlay
-                                                   else cell)
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Some(moveToPlay)
+                                                   else cell )
 
         let cells =     
             game.Cells 
@@ -82,7 +83,7 @@ let won (cells: Cell array array) =
 
     let areThreeCellsWin (cells : seq<Cell*Cell*Cell>) = 
         cells
-        |> Seq.where (fun (a,_, _) -> a <> Empty)
+        |> Seq.where ( fun (a,_, _) -> a <> None)
         |> Seq.exists (fun (a,b,c) -> a = b && a = c)
 
     Seq.concat [ rowsPicker;columnsPicker;diagPicker ] |> areThreeCellsWin

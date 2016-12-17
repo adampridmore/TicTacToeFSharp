@@ -17,7 +17,7 @@ let humanMoveAndPrint game =
 
     printfn "Move: %A" move
 
-    playMove move Cell.X game
+    playMove move Token.X game
 
 Seq.unfold (fun state -> 
     let nextState = state |> humanMoveAndPrint; 

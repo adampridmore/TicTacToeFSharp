@@ -7,27 +7,27 @@ open NUnit.Framework
 [<Test>]
 let ``row win``() = 
     [| 
-        [| X; X; X |]
-        [| Cell.Empty; Cell.Empty; Cell.Empty |]
-        [| Cell.Empty; Cell.Empty; Cell.Empty |] 
+        [| Some(X); Some(X); Some(X) |]
+        [| None; None; None |]
+        [| None; None; None |] 
     |]
     |> won |> should equal true
 
 [<Test>]
 let ``colum win``() = 
     [| 
-        [| Cell.Empty; Cell.Empty; O|]
-        [| Cell.Empty; Cell.Empty; O|]
-        [| Cell.Empty; Cell.Empty; O|] 
+        [| None; None; Some(O)|]
+        [| None; None; Some(O)|]
+        [| None; None; Some(O)|] 
     |]
     |> won |> should equal true
 
 [<Test>]
 let ``diagonal win``() = 
     [| 
-        [| Cell.Empty; Cell.Empty; O|]
-        [| Cell.Empty; O; Cell.Empty|]
-        [| O; Cell.Empty; Cell.Empty|] 
+        [| None; None; Some(O)|]
+        [| None; Some(O); None|]
+        [| Some(O); None; None|] 
     |]
     |> won |> should equal true
 
