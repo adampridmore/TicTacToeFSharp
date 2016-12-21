@@ -59,7 +59,10 @@
     <Compile Include="Tictactoe.fs" />
     <Compile Include="TictactoeTests.fs" />
     <Compile Include="Program.fs" />
+    <Compile Include="SeqUtils.fs" />
+    <Compile Include="SeqUtilTests.fs" />
     <None Include="Script1.fsx" />
+    <None Include="Script2.fsx" />
     <None Include="App.config" />
     <Content Include="packages.config" />
   </ItemGroup>

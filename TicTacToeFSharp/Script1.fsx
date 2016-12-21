@@ -1,4 +1,5 @@
 ﻿#load "Tictactoe.fs"
+#load "SeqUtils.fs"
 
 open Tictactoe
 
@@ -20,11 +21,7 @@ let humanMoveAndPrint game =
     playMove move game
 
 let endGame = 
-    Seq.unfold (fun state -> 
-        let nextState = state |> humanMoveAndPrint; 
-        Some(nextState,nextState) ) newGame
-    // TODO - This doesn't include the last game state...
-    |> Seq.takeWhile (fun game -> game.State = GameState.InProgress)
+    Seq.unfoldUntil humanMoveAndPrint (fun g -> g.State <> GameState.InProgress) newGame
     |> Seq.last
 
 printfn "Game Over"
