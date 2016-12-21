@@ -26,7 +26,7 @@ let endGame =
 
 printfn "Game Over"
 printfn "Player %s won" (Some(endGame.NextMove |> tokenToggle) |> cellToString)
-endGame |> printGame 
+endGame |> printGame |> ignore
 
 //newGame 
 //////|> humanMoveAndPrint
