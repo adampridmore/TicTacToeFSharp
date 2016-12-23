@@ -36,3 +36,24 @@ let ``Empty board is not win``() =
     emptyCells
     |> won |> should equal false
 
+[<Test>]
+let ``Is not draw``() = 
+    emptyCells |> isDraw |> should equal false
+        
+[<Test>]
+let ``Is not draw 2``() = 
+    [| 
+        [| None; None; Some(O)|]
+        [| None; Some(O); None|]
+        [| Some(O); None; None|] 
+    |]
+    |> isDraw |> should equal false
+
+[<Test>]
+let ``Is draw ``() = 
+    [| 
+        [| Some(O);Some(O);Some(O)|]
+        [| Some(O);Some(O);Some(O)|]
+        [| Some(O);Some(O);Some(O)|] 
+    |]
+    |> isDraw |> should equal true

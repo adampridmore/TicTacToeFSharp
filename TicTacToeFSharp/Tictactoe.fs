@@ -3,7 +3,7 @@
 type Token = X | O
 type Cell = Token Option
 
-type GameState = InProgress | XWon | OWon
+type GameState = InProgress | Draw | XWon | OWon
 
 type Game = {
     Cells : Cell array array
@@ -25,6 +25,7 @@ let newGame =
 let gameStateToString = 
     function
     | InProgress -> "In Progress"
+    | Draw -> "Draw"
     | XWon -> "X Won"
     | OWon -> "O Won"
     
@@ -47,8 +48,7 @@ let private gameToString (game:Game) =
     let stateText = 
         function 
         | InProgress -> sprintf "%s to play" (game.NextMove |> tokenToString)
-        | XWon -> "X Won"
-        | OWon-> "O Won"
+        | state ->  state |> gameStateToString
 
     [game.State |> stateText ] @ (game.Cells |> Seq.map rowToString |> Seq.toList )
     |> String.concat "\r\n"
@@ -73,6 +73,11 @@ let won (cells: Cell array array) =
 
     Seq.concat [ rowsPicker;columnsPicker;diagPicker ] |> areThreeCellsWin
 
+let isDraw (cells: Cell array array) = 
+    cells
+    |> Seq.exists (fun row -> row |> Seq.exists (fun c -> c = Cell.None))
+    |> not
+    
 let printGame = gameToString >> (printfn "%s")
 
 let private isInProgress (game:Game) = game.State <> InProgress
@@ -98,7 +103,9 @@ let private playMove (game:Game) (x,y) =
             | true -> match game.NextMove with 
                       | X -> XWon
                       | Y -> OWon
-            | false -> GameState.InProgress
+            | false ->  match cells |> isDraw with
+                        | true -> GameState.Draw
+                        | false -> GameState.InProgress
         
         {
             Cells = cells
