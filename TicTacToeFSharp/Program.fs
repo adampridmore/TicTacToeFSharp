@@ -23,6 +23,6 @@ let main argv =
 
     printfn "Game Over"
     printfn "Player %s" (endGame.State |> gameStateToString)
-    endGame |> printGame 
+    endGame |> printGame |> ignore
 
     0 // return an integer exit code

@@ -27,18 +27,18 @@ let gameStateToString =
     | InProgress -> "In Progress"
     | XWon -> "X Won"
     | OWon -> "O Won"
-
-let tokenToString = 
-    function 
-    | X -> "X" 
-    | O -> "O"
-
-let cellToString = 
-    function
-    | None -> " "
-    | Some(x) -> x |> tokenToString
     
-let gameToString (game:Game) =
+let private gameToString (game:Game) =
+    let tokenToString = 
+        function 
+        | X -> "X" 
+        | O -> "O"
+
+    let cellToString = 
+        function
+        | None -> " "
+        | Some(x) -> x |> tokenToString
+
     let rowToString (row: Cell array) = 
         row
         |> Seq.map cellToString
@@ -46,7 +46,7 @@ let gameToString (game:Game) =
     
     let stateText = 
         function 
-        | InProgress -> "In Progress"
+        | InProgress -> sprintf "%s to play" (game.NextMove |> tokenToString)
         | XWon -> "X Won"
         | OWon-> "O Won"
 
@@ -75,10 +75,9 @@ let won (cells: Cell array array) =
 
 let printGame = gameToString >> (printfn "%s")
 
-let isInProgress (game:Game) = 
-    game.State <> InProgress
+let private isInProgress (game:Game) = game.State <> InProgress
 
-let playMove (game:Game) (x,y) =
+let private playMove (game:Game) (x,y) =
     let isLegalMove = game.Cells.[y].[x] = None
 
     if not isLegalMove 
@@ -106,12 +105,6 @@ let playMove (game:Game) (x,y) =
             State = state
             NextMove = game.NextMove |> tokenToggle
         }
-
-let playMoveAndPrint (x,y) game = 
-    printfn "Played %A at %d,%d" game.NextMove x y
-    let next = playMove game (x,y)
-    next |> printGame
-    next
 
 let playGame (makeMove: Game -> (int*int)) = 
     let nextMove game = 

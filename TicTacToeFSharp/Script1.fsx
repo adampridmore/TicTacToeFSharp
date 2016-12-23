@@ -1,32 +1,15 @@
-﻿#load "Tictactoe.fs"
-#load "SeqUtils.fs"
+﻿#load "SeqUtils.fs"
+#load "Tictactoe.fs"
 
 open Tictactoe
 
-let parseCharToInt32 (c:char) = 
-    c.ToString() |> System.Int32.Parse
+let getMove (game:Game) = 
+    (0,0)
 
-let readMove() = 
-    let lineChar = System.Console.ReadLine().ToCharArray()
-    let x = lineChar.[0] |> parseCharToInt32
-    let y = lineChar.[2] |> parseCharToInt32
-    x,y
-
-let humanMoveAndPrint game = 
-    game |> printGame
-    let move = readMove()
-
-    printfn "Move: %A" move
-
-    playMove move game
-
-let endGame = 
-    Seq.unfoldUntil humanMoveAndPrint (fun g -> g.State <> GameState.InProgress) newGame
-    |> Seq.last
-
+let endGame = playGame getMove
 printfn "Game Over"
-printfn "Player %s won" (Some(endGame.NextMove |> tokenToggle) |> cellToString)
-endGame |> printGame |> ignore
+printfn "Player %s" (endGame.State |> gameStateToString)
+endGame |> printGame 
 
 //newGame 
 //////|> humanMoveAndPrint
