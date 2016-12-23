@@ -28,18 +28,18 @@ let gameStateToString =
     | Draw -> "Draw"
     | XWon -> "X Won"
     | OWon -> "O Won"
-    
+
+let tokenToString = 
+    function 
+    | X -> "X" 
+    | O -> "O"
+
+let cellToString = 
+    function
+    | None -> " "
+    | Some(x) -> x |> tokenToString
+
 let private gameToString (game:Game) =
-    let tokenToString = 
-        function 
-        | X -> "X" 
-        | O -> "O"
-
-    let cellToString = 
-        function
-        | None -> " "
-        | Some(x) -> x |> tokenToString
-
     let rowToString (row: Cell array) = 
         row
         |> Seq.map cellToString
@@ -82,7 +82,7 @@ let printGame = gameToString >> (printfn "%s")
 
 let private isInProgress (game:Game) = game.State <> InProgress
 
-let private playMove (game:Game) (x,y) =
+let playMove (game:Game) (x,y) =
     let isLegalMove = game.Cells.[y].[x] = None
 
     if not isLegalMove 
