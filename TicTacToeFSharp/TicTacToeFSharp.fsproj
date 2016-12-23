@@ -60,6 +60,7 @@
     <Compile Include="SeqUtilTests.fs" />
     <Compile Include="Tictactoe.fs" />
     <Compile Include="TictactoeTests.fs" />
+    <Compile Include="TictactoeComputerPlayer.fs" />
     <Compile Include="Program.fs" />
     <None Include="Script1.fsx" />
     <None Include="Script2.fsx" />

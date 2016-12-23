@@ -32,6 +32,7 @@
             this.tbToPlay = new System.Windows.Forms.TextBox();
             this.bNewGame = new System.Windows.Forms.Button();
             this.ticTacToeControl1 = new TicTacToeApp.TicTacToeControl();
+            this.cbPlayAi = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // tbGameState
@@ -75,11 +76,24 @@
             this.ticTacToeControl1.TabIndex = 0;
             this.ticTacToeControl1.CellClick += new TicTacToeApp.TicTacToeControl.CellClicked(this.ticTacToeControl1_CellClick);
             // 
+            // cbPlayAi
+            // 
+            this.cbPlayAi.AutoSize = true;
+            this.cbPlayAi.Checked = true;
+            this.cbPlayAi.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbPlayAi.Location = new System.Drawing.Point(747, 129);
+            this.cbPlayAi.Name = "cbPlayAi";
+            this.cbPlayAi.Size = new System.Drawing.Size(142, 36);
+            this.cbPlayAi.TabIndex = 4;
+            this.cbPlayAi.Text = "Play AI";
+            this.cbPlayAi.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1224, 802);
+            this.Controls.Add(this.cbPlayAi);
             this.Controls.Add(this.bNewGame);
             this.Controls.Add(this.tbToPlay);
             this.Controls.Add(this.tbGameState);
@@ -97,6 +111,7 @@
         private System.Windows.Forms.TextBox tbGameState;
         private System.Windows.Forms.TextBox tbToPlay;
         private System.Windows.Forms.Button bNewGame;
+        private System.Windows.Forms.CheckBox cbPlayAi;
     }
 }
 

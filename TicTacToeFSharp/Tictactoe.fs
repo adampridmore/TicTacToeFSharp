@@ -124,3 +124,12 @@ let playGame (makeMove: Game -> (int*int)) =
 
     Seq.unfoldUntil nextMove isInProgress newGame 
     |> Seq.last
+
+
+let getLegalMoves (game:Game) = 
+    seq{
+        for y in 0..2 do 
+            for x in 0..2 do 
+                yield (x,y)
+        }
+    |> Seq.filter (fun (x,y) -> game.Cells.[y].[x] = Empty) 

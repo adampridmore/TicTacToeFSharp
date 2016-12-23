@@ -34,6 +34,15 @@ namespace TicTacToeApp
         {
             _currentGameState = Tictactoe.playMove(_currentGameState, x, y);
 
+            if (_currentGameState.State == Tictactoe.GameState.InProgress)
+            {
+                if (cbPlayAi.Checked)
+                {
+                    var computerMove = TictactoeComputerPlayer.getMove(_currentGameState);
+                    _currentGameState = Tictactoe.playMove(_currentGameState, computerMove.Item1, computerMove.Item2);
+                }
+            }
+
             RefreshUi();
         }
 
