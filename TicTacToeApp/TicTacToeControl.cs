@@ -94,6 +94,8 @@ namespace TicTacToeApp
                 Tag = tag,
             };
 
+            button.Font = new Font(button.Font.FontFamily, button.Font.Size*4);
+
             button.Click += Button_Click;
 
             return button;
