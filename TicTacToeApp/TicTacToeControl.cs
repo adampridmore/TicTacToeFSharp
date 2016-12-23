@@ -52,12 +52,12 @@ namespace TicTacToeApp
             }
         }
 
-        private static string GetCellText(FSharpOption<Tictactoe.Token> cell)
+        private static string GetCellText(Tictactoe.Cell cell)
         {
             return Tictactoe.cellToString(cell);
         }
 
-        private IEnumerable<Tuple<int, int, FSharpOption<Tictactoe.Token>>> GetCells()
+        private IEnumerable<Tuple<int, int, Tictactoe.Cell>> GetCells()
         {
             return GetCellIndexes()
                     .Select(
@@ -67,7 +67,7 @@ namespace TicTacToeApp
                             var y = xy.Item2;
                             var option = _game.Cells[y][x];
 
-                            return new Tuple<int, int, FSharpOption<Tictactoe.Token>>(x, y, option);
+                            return new Tuple<int, int, Tictactoe.Cell>(x, y, option);
                         })
                 ;
         }
@@ -109,9 +109,9 @@ namespace TicTacToeApp
             }
 
             var button = (Button) sender;
-            var tuple = (Tuple<int, int, FSharpOption<Tictactoe.Token>>) button.Tag;
+            var tuple = (Tuple<int, int, Tictactoe.Cell>) button.Tag;
 
-            if (tuple.Item3 == null)
+            if (tuple.Item3 == Tictactoe.Cell.Empty)
             {
                 OnCellClick(tuple.Item1, tuple.Item2);
             }

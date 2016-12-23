@@ -7,32 +7,32 @@ open NUnit.Framework
 [<Test>]
 let ``row win``() = 
     [| 
-        [| Some(X); Some(X); Some(X) |]
-        [| None; None; None |]
-        [| None; None; None |] 
+        [| Token(X); Token(X); Token(X) |]
+        [| Cell.Empty; Cell.Empty; Cell.Empty |]
+        [| Cell.Empty; Cell.Empty; Cell.Empty |] 
     |]
     |> won |> should equal true
 
 [<Test>]
 let ``colum win``() = 
     [| 
-        [| None; None; Some(O)|]
-        [| None; None; Some(O)|]
-        [| None; None; Some(O)|] 
+        [| Cell.Empty; Cell.Empty; Token(O)|]
+        [| Cell.Empty; Cell.Empty; Token(O)|]
+        [| Cell.Empty; Cell.Empty; Token(O)|] 
     |]
     |> won |> should equal true
 
 [<Test>]
 let ``diagonal win``() = 
     [| 
-        [| None; None; Some(O)|]
-        [| None; Some(O); None|]
-        [| Some(O); None; None|] 
+        [| Cell.Empty; Cell.Empty; Token(O)|]
+        [| Cell.Empty; Token(O); Cell.Empty|]
+        [| Token(O); Cell.Empty; Cell.Empty|] 
     |]
     |> won |> should equal true
 
 [<Test>]
-let ``Empty board is not win``() = 
+let ``Cell.Empty board is not win``() = 
     emptyCells
     |> won |> should equal false
 
@@ -43,17 +43,17 @@ let ``Is not draw``() =
 [<Test>]
 let ``Is not draw 2``() = 
     [| 
-        [| None; None; Some(O)|]
-        [| None; Some(O); None|]
-        [| Some(O); None; None|] 
+        [| Cell.Empty; Cell.Empty; Token(O)|]
+        [| Cell.Empty; Token(O); Cell.Empty|]
+        [| Token(O); Cell.Empty; Cell.Empty|] 
     |]
     |> isDraw |> should equal false
 
 [<Test>]
 let ``Is draw ``() = 
     [| 
-        [| Some(O);Some(O);Some(O)|]
-        [| Some(O);Some(O);Some(O)|]
-        [| Some(O);Some(O);Some(O)|] 
+        [| Token(O);Token(O);Token(O)|]
+        [| Token(O);Token(O);Token(O)|]
+        [| Token(O);Token(O);Token(O)|] 
     |]
     |> isDraw |> should equal true

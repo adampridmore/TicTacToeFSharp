@@ -1,7 +1,10 @@
 ﻿module Tictactoe
 
 type Token = X | O
-type Cell = Token Option
+
+type Cell = 
+    | Token of Token
+    | Empty
 
 type GameState = InProgress | Draw | XWon | OWon
 
@@ -11,7 +14,7 @@ type Game = {
     NextMove : Token
 }
 
-let emptyCells = Array.create 3 (Array.create 3 None)
+let emptyCells = Array.create 3 (Array.create 3 Empty)
 
 let tokenToggle = function | X -> O | O -> X
 
@@ -36,8 +39,8 @@ let tokenToString =
 
 let cellToString = 
     function
-    | None -> " "
-    | Some(x) -> x |> tokenToString
+    | Empty-> " "
+    | Token(t) -> t |> tokenToString
 
 let private gameToString (game:Game) =
     let rowToString (row: Cell array) = 
@@ -68,14 +71,14 @@ let won (cells: Cell array array) =
 
     let areThreeCellsWin (cells : seq<Cell*Cell*Cell>) = 
         cells
-        |> Seq.where ( fun (a,_, _) -> a <> None)
+        |> Seq.where ( fun (a,_, _) -> a <> Empty)
         |> Seq.exists (fun (a,b,c) -> a = b && a = c)
 
     Seq.concat [ rowsPicker;columnsPicker;diagPicker ] |> areThreeCellsWin
 
 let isDraw (cells: Cell array array) = 
     cells
-    |> Seq.exists (fun row -> row |> Seq.exists (fun c -> c = Cell.None))
+    |> Seq.exists (fun row -> row |> Seq.exists (fun c -> c = Empty))
     |> not
     
 let printGame = gameToString >> (printfn "%s")
@@ -83,14 +86,14 @@ let printGame = gameToString >> (printfn "%s")
 let private isInProgress (game:Game) = game.State <> InProgress
 
 let playMove (game:Game) (x,y) =
-    let isLegalMove = game.Cells.[y].[x] = None
+    let isLegalMove = game.Cells.[y].[x] = Empty
 
     if not isLegalMove 
     then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  game.NextMove x y (game |> gameToString) )
     else 
         let playMoveRow (row : Cell array) : (Cell array) = 
             row 
-            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Some(game.NextMove)
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Token(game.NextMove)
                                                    else cell )
 
         let cells =     
