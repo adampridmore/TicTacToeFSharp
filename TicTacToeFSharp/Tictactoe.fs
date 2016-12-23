@@ -22,12 +22,22 @@ let newGame =
         NextMove = X
     }
 
-let cellToString (c:Cell) = 
-    match c with
-    | None -> " "
-    | Some(X) -> "X"
-    | Some(O) -> "O"
+let gameStateToString = 
+    function
+    | InProgress -> "In Progress"
+    | XWon -> "X Won"
+    | OWon -> "O Won"
 
+let tokenToString = 
+    function 
+    | X -> "X" 
+    | O -> "O"
+
+let cellToString = 
+    function
+    | None -> " "
+    | Some(x) -> x |> tokenToString
+    
 let gameToString (game:Game) =
     let rowToString (row: Cell array) = 
         row
@@ -65,7 +75,10 @@ let won (cells: Cell array array) =
 
 let printGame = gameToString >> (printfn "%s")
 
-let playMove (x,y) (game:Game) =
+let isInProgress (game:Game) = 
+    game.State <> InProgress
+
+let playMove (game:Game) (x,y) =
     let isLegalMove = game.Cells.[y].[x] = None
 
     if not isLegalMove 
@@ -96,6 +109,15 @@ let playMove (x,y) (game:Game) =
 
 let playMoveAndPrint (x,y) game = 
     printfn "Played %A at %d,%d" game.NextMove x y
-    let next = playMove (x,y) game
+    let next = playMove game (x,y)
     next |> printGame
     next
+
+let playGame (makeMove: Game -> (int*int)) = 
+    let nextMove game = 
+        game 
+        |> makeMove 
+        |> playMove game
+
+    Seq.unfoldUntil nextMove isInProgress newGame 
+    |> Seq.last

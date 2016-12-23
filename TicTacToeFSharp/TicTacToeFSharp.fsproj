@@ -56,10 +56,10 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Tictactoe.fs" />
-    <Compile Include="TictactoeTests.fs" />
     <Compile Include="SeqUtils.fs" />
     <Compile Include="SeqUtilTests.fs" />
+    <Compile Include="Tictactoe.fs" />
+    <Compile Include="TictactoeTests.fs" />
     <Compile Include="Program.fs" />
     <None Include="Script1.fsx" />
     <None Include="Script2.fsx" />
