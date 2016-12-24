@@ -38,12 +38,17 @@ namespace TicTacToeApp
             {
                 if (cbPlayAi.Checked)
                 {
-                    var computerMove = TictactoeComputerPlayer.getMove(_currentGameState);
-                    _currentGameState = Tictactoe.playMove(_currentGameState, computerMove.Item1, computerMove.Item2);
+                    _currentGameState = PlayComputerAiMove(_currentGameState);
                 }
             }
 
             RefreshUi();
+        }
+
+        private static Tictactoe.Game PlayComputerAiMove(Tictactoe.Game currentGameState)
+        {
+            var computerMove = TictactoeComputerPlayer.getMove(currentGameState);
+            return Tictactoe.playMove(currentGameState, computerMove.Item1, computerMove.Item2);
         }
 
         private void bNewGame_Click(object sender, EventArgs e)
