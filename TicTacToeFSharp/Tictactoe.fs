@@ -22,6 +22,8 @@ type Game = {
 
 let emptyCells = Array.create 3 (Array.create 3 Empty)
 
+let moveToNumber (move:Move) = (move.X + (move.Y * 3)) + 1
+
 let tokenToggle = function | X -> O | O -> X
 
 let newGame = 

@@ -55,6 +55,7 @@
             // 
             // bNewGame
             // 
+            this.bNewGame.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.bNewGame.Location = new System.Drawing.Point(894, 697);
             this.bNewGame.Name = "bNewGame";
             this.bNewGame.Size = new System.Drawing.Size(316, 93);
@@ -78,6 +79,7 @@
             // 
             // cbPlayAi
             // 
+            this.cbPlayAi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.cbPlayAi.AutoSize = true;
             this.cbPlayAi.Checked = true;
             this.cbPlayAi.CheckState = System.Windows.Forms.CheckState.Checked;

@@ -40,15 +40,16 @@ namespace TicTacToeApp
 
             var cellSize = new Size(Size.Width/3, Size.Height/3);
 
-            foreach (var tuple in GetCells())
-            {
-                var x = tuple.Item1;
-                var y = tuple.Item2;
-                var cell = tuple.Item3;
-                var cellText = GetCellText(cell);
+            GetCells().
+                Select(delegate(Tuple<Tictactoe.Move, Tictactoe.Cell> tuple)
+                {
+                    var move = tuple.Item1;
+                    var cell = tuple.Item2;
 
-                Controls.Add(CreateCell(cellSize, x, y, cellText, tuple));
-            }
+                    return CreateCell(cellSize, move, cell, tuple);
+                })
+                .ToList()
+                .ForEach(cell => Controls.Add(cell));
         }
 
         private static string GetCellText(Tictactoe.Cell cell)
@@ -56,48 +57,59 @@ namespace TicTacToeApp
             return Tictactoe.cellToString(cell);
         }
 
-        private IEnumerable<Tuple<int, int, Tictactoe.Cell>> GetCells()
+        private IEnumerable<Tuple<Tictactoe.Move, Tictactoe.Cell>> GetCells()
         {
             return GetCellIndexes()
                     .Select(
-                        delegate(Tuple<int, int> xy)
+                        delegate(Tictactoe.Move move)
                         {
-                            var x = xy.Item1;
-                            var y = xy.Item2;
-                            var option = _game.Cells[y][x];
+                            var option = _game.Cells[move.Y][move.X];
 
-                            return new Tuple<int, int, Tictactoe.Cell>(x, y, option);
+                            return new Tuple<Tictactoe.Move, Tictactoe.Cell>(move, option);
                         })
                 ;
         }
 
-        public IEnumerable<Tuple<int, int>> GetCellIndexes()
+        public IEnumerable<Tictactoe.Move> GetCellIndexes()
         {
             for (var y = 0; y <= 2; y++)
             {
                 for (var x = 0; x <= 2; x++)
                 {
-                    yield return new Tuple<int, int>(x, y);
+                    yield return new Tictactoe.Move(x, y);
                 }
             }
         }
 
-        private Control CreateCell(Size cellSize, int x, int y, string text, object tag)
+        private Control CreateCell(Size cellSize, Tictactoe.Move move, Tictactoe.Cell cell, object tag)
         {
             var button = new Button
             {
                 FlatStyle = FlatStyle.Popup,
-                Text = text,
                 Size = cellSize,
-                Location = new Point(x*cellSize.Width, y*cellSize.Height),
-                Tag = tag,
+                Location = new Point(move.X*cellSize.Width, move.Y*cellSize.Height),
+                Tag = tag
             };
 
             button.Font = new Font(button.Font.FontFamily, button.Font.Size*4);
-
             button.Click += Button_Click;
 
+            ApplyText(button, cell, move);
+
             return button;
+        }
+
+        private void ApplyText(Button button, Tictactoe.Cell cell, Tictactoe.Move move)
+        {
+            if (cell.IsEmpty)
+            {
+                button.ForeColor = Color.White;
+                button.Text = Tictactoe.moveToNumber(move).ToString();
+            }
+            else
+            {
+                button.Text = GetCellText(cell);
+            }
         }
 
         private void Button_Click(object sender, EventArgs e)
@@ -108,11 +120,11 @@ namespace TicTacToeApp
             }
 
             var button = (Button) sender;
-            var tuple = (Tuple<int, int, Tictactoe.Cell>) button.Tag;
+            var tuple = (Tuple<Tictactoe.Move, Tictactoe.Cell>) button.Tag;
 
-            var move = new Tictactoe.Move(tuple.Item1, tuple.Item2);
+            var move = tuple.Item1;
 
-            if (tuple.Item3 == Tictactoe.Cell.Empty)
+            if (tuple.Item2 == Tictactoe.Cell.Empty)
             {
                 OnCellClick(move);
             }

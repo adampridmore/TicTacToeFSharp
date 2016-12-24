@@ -67,7 +67,7 @@
     <None Include="Script1.fsx" />
     <None Include="Script2.fsx" />
     <None Include="Script3.fsx" />
-    <None Include="Script4.fsx" />
+    <None Include="Script4_generate_games_csv.fsx" />
     <None Include="App.config" />
     <Content Include="packages.config" />
   </ItemGroup>
