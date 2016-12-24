@@ -42,18 +42,25 @@ let cellToString =
     | Empty-> " "
     | Token(t) -> t |> tokenToString
 
-let private gameToString (game:Game) =
+
+let private cellsToString (cells: Cell array array) = 
     let rowToString (row: Cell array) = 
         row
         |> Seq.map cellToString
         |> Seq.reduce (+)
     
+    cells 
+    |> Seq.map rowToString 
+    |> Seq.toList 
+    |> String.concat "\r\n"
+
+let private gameToString (game:Game) =
     let stateText = 
         function 
         | InProgress -> sprintf "%s to play" (game.NextMove |> tokenToString)
         | state ->  state |> gameStateToString
 
-    [game.State |> stateText ] @ (game.Cells |> Seq.map rowToString |> Seq.toList )
+    [game.State |> stateText ] @ [ game.Cells |> cellsToString ]
     |> String.concat "\r\n"
 
 let won (cells: Cell array array) = 
@@ -85,36 +92,39 @@ let printGame = gameToString >> (printfn "%s")
 
 let private isInProgress (game:Game) = game.State <> InProgress
 
-let playMove (game:Game) (x,y) =
-    let isLegalMove = game.Cells.[y].[x] = Empty
+let playMoveWithToken (cells:Cell array array) (token:Token) (x,y) =
+    let isLegalMove = cells.[y].[x] = Empty
 
     if not isLegalMove 
-    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  game.NextMove x y (game |> gameToString) )
+    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  token x y (cells |> cellsToString) )
     else 
         let playMoveRow (row : Cell array) : (Cell array) = 
             row 
-            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Token(game.NextMove)
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Token(token)
                                                    else cell )
 
-        let cells =     
-            game.Cells 
+        let newCells =     
+            cells 
             |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow
                                                else row)
-
+                                                       
         let state = 
-            match (cells |> won) with 
-            | true -> match game.NextMove with 
+            match (newCells |> won) with 
+            | true -> match token with 
                       | X -> XWon
                       | Y -> OWon
-            | false ->  match cells |> isDraw with
+            | false ->  match newCells |> isDraw with
                         | true -> GameState.Draw
                         | false -> GameState.InProgress
         
         {
-            Cells = cells
+            Cells = newCells
             State = state
-            NextMove = game.NextMove |> tokenToggle
+            NextMove = token |> tokenToggle
         }
+
+let playMove (game:Game) (move : int*int) = 
+    playMoveWithToken game.Cells game.NextMove move
 
 let playGame (makeMove: Game -> (int*int)) = 
     let nextMove game = 
