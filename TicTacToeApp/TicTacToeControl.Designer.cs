@@ -36,6 +36,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "TicTacToeControl";
             this.Size = new System.Drawing.Size(1108, 739);
+            this.Resize += new System.EventHandler(this.TicTacToeControl_Resize);
             this.ResumeLayout(false);
 
         }

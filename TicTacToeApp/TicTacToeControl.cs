@@ -91,7 +91,7 @@ namespace TicTacToeApp
                 Tag = tag
             };
 
-            button.Font = new Font(button.Font.FontFamily, button.Font.Size*4);
+            button.Font = new Font(button.Font.FontFamily, (cellSize.Height * 0.6f));
             button.Click += Button_Click;
 
             ApplyText(button, cell, move);
@@ -133,6 +133,11 @@ namespace TicTacToeApp
         protected virtual void OnCellClick(Tictactoe.Move move)
         {
             CellClick?.Invoke(move);
+        }
+
+        private void TicTacToeControl_Resize(object sender, EventArgs e)
+        {
+            RefreshForm();
         }
     }
 }
