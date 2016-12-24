@@ -8,7 +8,7 @@ type Cell =
 
 type GameState = InProgress | Draw | XWon | OWon
 
-type Move = {
+type Position = {
     X : int
     Y : int
 }
@@ -17,12 +17,12 @@ type Game = {
     Cells : Cell array array
     State : GameState
     NextMove : Token
-    PreviousMoves : Move array
+    PreviousMoves : Position array
 }
 
 let emptyCells = Array.create 3 (Array.create 3 Empty)
 
-let moveToNumber (move:Move) = (move.X + (move.Y * 3)) + 1
+let positionToNumber (p:Position) = (p.X + (p.Y * 3)) + 1
 
 let tokenToggle = function | X -> O | O -> X
 
@@ -101,7 +101,7 @@ let printGame = gameToString >> (printfn "%s")
 
 let private isInProgress (game:Game) = game.State <> InProgress
 
-let playMoveWithToken (cells:Cell array array) (previousMoves: Move array) (token:Token) (move:Move) =
+let playMoveWithToken (cells:Cell array array) (previousMoves: Position array) (token:Token) (move:Position) =
     let isLegalMove = cells.[move.Y].[move.X] = Empty
 
     if not isLegalMove 
@@ -134,10 +134,10 @@ let playMoveWithToken (cells:Cell array array) (previousMoves: Move array) (toke
             
         }
 
-let playMove (game:Game) (move : Move) = 
+let playMove (game:Game) (move : Position) = 
     playMoveWithToken game.Cells game.PreviousMoves game.NextMove move
 
-let playGame (makeMove: Game -> Move) = 
+let playGame (makeMove: Game -> Position) = 
     let nextMove game = 
         game 
         |> makeMove 

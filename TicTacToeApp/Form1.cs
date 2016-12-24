@@ -30,9 +30,9 @@ namespace TicTacToeApp
             tbToPlay.Text = Tictactoe.tokenToString(_currentGameState.NextMove);
         }
 
-        private void ticTacToeControl1_CellClick(Tictactoe.Move move)
+        private void ticTacToeControl1_CellClick(Tictactoe.Position position)
         {
-            _currentGameState = Tictactoe.playMove(_currentGameState, move);
+            _currentGameState = Tictactoe.playMove(_currentGameState, position);
 
             if (_currentGameState.State == Tictactoe.GameState.InProgress)
             {

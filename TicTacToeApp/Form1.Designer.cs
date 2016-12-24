@@ -31,8 +31,8 @@
             this.tbGameState = new System.Windows.Forms.TextBox();
             this.tbToPlay = new System.Windows.Forms.TextBox();
             this.bNewGame = new System.Windows.Forms.Button();
-            this.ticTacToeControl1 = new TicTacToeApp.TicTacToeControl();
             this.cbPlayAi = new System.Windows.Forms.CheckBox();
+            this.ticTacToeControl1 = new TicTacToeApp.TicTacToeControl();
             this.SuspendLayout();
             // 
             // tbGameState
@@ -64,6 +64,19 @@
             this.bNewGame.UseVisualStyleBackColor = true;
             this.bNewGame.Click += new System.EventHandler(this.bNewGame_Click);
             // 
+            // cbPlayAi
+            // 
+            this.cbPlayAi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbPlayAi.AutoSize = true;
+            this.cbPlayAi.Checked = true;
+            this.cbPlayAi.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbPlayAi.Location = new System.Drawing.Point(779, 125);
+            this.cbPlayAi.Name = "cbPlayAi";
+            this.cbPlayAi.Size = new System.Drawing.Size(142, 36);
+            this.cbPlayAi.TabIndex = 4;
+            this.cbPlayAi.Text = "Play AI";
+            this.cbPlayAi.UseVisualStyleBackColor = true;
+            // 
             // ticTacToeControl1
             // 
             this.ticTacToeControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -76,19 +89,6 @@
             this.ticTacToeControl1.Size = new System.Drawing.Size(733, 650);
             this.ticTacToeControl1.TabIndex = 0;
             this.ticTacToeControl1.CellClick += new TicTacToeApp.TicTacToeControl.CellClicked(this.ticTacToeControl1_CellClick);
-            // 
-            // cbPlayAi
-            // 
-            this.cbPlayAi.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.cbPlayAi.AutoSize = true;
-            this.cbPlayAi.Checked = true;
-            this.cbPlayAi.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbPlayAi.Location = new System.Drawing.Point(747, 129);
-            this.cbPlayAi.Name = "cbPlayAi";
-            this.cbPlayAi.Size = new System.Drawing.Size(142, 36);
-            this.cbPlayAi.TabIndex = 4;
-            this.cbPlayAi.Text = "Play AI";
-            this.cbPlayAi.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 

@@ -19,7 +19,7 @@ let playGame() =
 #time "on"
 
 let toCsvRow (game: Game) =
-    let moveTextValues = game.PreviousMoves |> Seq.map moveToNumber |> Seq.map string |> Seq.toList
+    let moveTextValues = game.PreviousMoves |> Seq.map positionToNumber |> Seq.map string |> Seq.toList
     
     let gameStateToString = 
         function 
