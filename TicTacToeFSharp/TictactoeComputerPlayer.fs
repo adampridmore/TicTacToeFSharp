@@ -16,7 +16,7 @@ let getMove (game:Game) =
        
     let getMovesForTargetWinningState tokenToPlay targetState =
         legalMoves
-        |> Seq.map(fun move -> move, move |> playMoveWithToken game.Cells tokenToPlay)
+        |> Seq.map(fun move -> move, move |> playMoveWithToken game.Cells Array.empty tokenToPlay)
         |> Seq.filter(fun (_ , nextGameStae) -> nextGameStae.State = targetState)
         |> Seq.map fst
 

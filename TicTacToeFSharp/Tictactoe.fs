@@ -8,10 +8,16 @@ type Cell =
 
 type GameState = InProgress | Draw | XWon | OWon
 
+type Move = {
+    X : int
+    Y : int
+}
+
 type Game = {
     Cells : Cell array array
     State : GameState
     NextMove : Token
+    PreviousMoves : Move array
 }
 
 let emptyCells = Array.create 3 (Array.create 3 Empty)
@@ -23,6 +29,7 @@ let newGame =
         Cells = emptyCells
         State = InProgress
         NextMove = X
+        PreviousMoves = Array.empty
     }
 
 let gameStateToString = 
@@ -92,20 +99,20 @@ let printGame = gameToString >> (printfn "%s")
 
 let private isInProgress (game:Game) = game.State <> InProgress
 
-let playMoveWithToken (cells:Cell array array) (token:Token) (x,y) =
-    let isLegalMove = cells.[y].[x] = Empty
+let playMoveWithToken (cells:Cell array array) (previousMoves: Move array) (token:Token) (move:Move) =
+    let isLegalMove = cells.[move.Y].[move.X] = Empty
 
     if not isLegalMove 
-    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  token x y (cells |> cellsToString) )
+    then failwith (sprintf "Illegel move of '%A' at (%d, %d)\r\n%s"  token move.X move.Y (cells |> cellsToString) )
     else 
         let playMoveRow (row : Cell array) : (Cell array) = 
             row 
-            |> Array.mapi (fun columnIndex cell -> if columnIndex = x then Token(token)
+            |> Array.mapi (fun columnIndex cell -> if columnIndex = move.X then Token(token)
                                                    else cell )
 
         let newCells =     
             cells 
-            |> Array.mapi (fun rowIndex row -> if rowIndex = y then row |> playMoveRow
+            |> Array.mapi (fun rowIndex row -> if rowIndex = move.Y then row |> playMoveRow
                                                else row)
                                                        
         let state = 
@@ -121,12 +128,14 @@ let playMoveWithToken (cells:Cell array array) (token:Token) (x,y) =
             Cells = newCells
             State = state
             NextMove = token |> tokenToggle
+            PreviousMoves = Array.append previousMoves [|move|]
+            
         }
 
-let playMove (game:Game) (move : int*int) = 
-    playMoveWithToken game.Cells game.NextMove move
+let playMove (game:Game) (move : Move) = 
+    playMoveWithToken game.Cells game.PreviousMoves game.NextMove move
 
-let playGame (makeMove: Game -> (int*int)) = 
+let playGame (makeMove: Game -> Move) = 
     let nextMove game = 
         game 
         |> makeMove 
@@ -140,6 +149,6 @@ let getLegalMoves (game:Game) =
     seq{
         for y in 0..2 do 
             for x in 0..2 do 
-                yield (x,y)
+                yield {X=x; Y=y}
         }
-    |> Seq.filter (fun (x,y) -> game.Cells.[y].[x] = Empty) 
+    |> Seq.filter (fun move -> game.Cells.[move.Y].[move.X] = Empty) 

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Microsoft.FSharp.Core;
 
 namespace TicTacToeApp
 {
@@ -13,7 +12,7 @@ namespace TicTacToeApp
 
         private Tictactoe.Game _game;
 
-        public delegate void CellClicked(int x, int y);
+        public delegate void CellClicked(Tictactoe.Move move);
 
         public TicTacToeControl()
         {
@@ -111,15 +110,17 @@ namespace TicTacToeApp
             var button = (Button) sender;
             var tuple = (Tuple<int, int, Tictactoe.Cell>) button.Tag;
 
+            var move = new Tictactoe.Move(tuple.Item1, tuple.Item2);
+
             if (tuple.Item3 == Tictactoe.Cell.Empty)
             {
-                OnCellClick(tuple.Item1, tuple.Item2);
+                OnCellClick(move);
             }
         }
 
-        protected virtual void OnCellClick(int x, int y)
+        protected virtual void OnCellClick(Tictactoe.Move move)
         {
-            CellClick?.Invoke(x, y);
+            CellClick?.Invoke(move);
         }
     }
 }

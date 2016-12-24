@@ -11,7 +11,7 @@ let main argv =
         let lineChar = System.Console.ReadLine().ToCharArray()
         let x = lineChar.[0] |> parseCharToInt32
         let y = lineChar.[2] |> parseCharToInt32
-        x,y
+        {X = x; Y = y}
 
     let humanMoveAndPrint game = 
         game |> printGame

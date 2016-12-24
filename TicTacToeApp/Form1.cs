@@ -30,9 +30,9 @@ namespace TicTacToeApp
             tbToPlay.Text = Tictactoe.tokenToString(_currentGameState.NextMove);
         }
 
-        private void ticTacToeControl1_CellClick(int x, int y)
+        private void ticTacToeControl1_CellClick(Tictactoe.Move move)
         {
-            _currentGameState = Tictactoe.playMove(_currentGameState, x, y);
+            _currentGameState = Tictactoe.playMove(_currentGameState, move);
 
             if (_currentGameState.State == Tictactoe.GameState.InProgress)
             {
@@ -48,7 +48,7 @@ namespace TicTacToeApp
         private static Tictactoe.Game PlayComputerAiMove(Tictactoe.Game currentGameState)
         {
             var computerMove = TictactoeComputerPlayer.getMove(currentGameState);
-            return Tictactoe.playMove(currentGameState, computerMove.Item1, computerMove.Item2);
+            return Tictactoe.playMove(currentGameState, computerMove);
         }
 
         private void bNewGame_Click(object sender, EventArgs e)

@@ -4,7 +4,7 @@
 open Tictactoe
 
 let getMove (game:Game) = 
-    (0,0)
+    game |> getLegalMoves |> Seq.head
 
 let endGame = playGame getMove
 printfn "Game Over"

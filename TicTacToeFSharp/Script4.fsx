@@ -20,7 +20,7 @@ let playGame() =
 #time "on"
 
 seq{
-    for _ in 0..100000 do
+    for _ in 0..1000 do
         yield playGame()
 }
 //|> Seq.map (fun endGame -> endGame |> printGame; endGame)
