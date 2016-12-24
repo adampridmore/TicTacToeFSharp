@@ -10,3 +10,14 @@ let unfoldUntil next isLastItem initialState =
                         let lastItem = (nextState |> isLastItem)
                         Some(x, (Some(nextState), lastItem) )
     ) (Some(initialState), false)
+
+
+let any s = s |> Seq.isEmpty |> not
+
+let private rnd = new System.Random();
+
+let random (s:seq<'T>) : ('T) = 
+    let length = s |> Seq.length
+    let indexToTake = rnd.Next(length)
+
+    s |> Seq.item indexToTake

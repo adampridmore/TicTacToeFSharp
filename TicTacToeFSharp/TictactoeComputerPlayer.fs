@@ -14,19 +14,17 @@ let getMove (game:Game) =
 
     let legalMoves = game |> getLegalMoves 
        
-    let winningMoves = 
-        legalMoves 
-        |> Seq.map(fun move -> move, move |> playMove game)
-        |> Seq.filter(fun (_ , nextGameStae) -> nextGameStae.State = targetWinningState)
+    let getMovesForTargetWinningState tokenToPlay targetState =
+        legalMoves
+        |> Seq.map(fun move -> move, move |> playMoveWithToken game.Cells tokenToPlay)
+        |> Seq.filter(fun (_ , nextGameStae) -> nextGameStae.State = targetState)
         |> Seq.map fst
 
-    let loosingMoves = 
-        legalMoves 
-        |> Seq.map(fun move -> move, move |> playMoveWithToken game.Cells opponentToken)
-        |> Seq.filter(fun (_ , nextGameStae) -> nextGameStae.State = loosingState)
-        |> Seq.map fst
+    let winningMoves = getMovesForTargetWinningState myToken targetWinningState
+    let loosingMoves = getMovesForTargetWinningState opponentToken loosingState
     
-    match winningMoves, loosingMoves with
-    | winningMoves, _ when winningMoves |> Seq.isEmpty |> not -> winningMoves |> Seq.head
-    | _, loosingMoves when loosingMoves |> Seq.isEmpty |> not -> loosingMoves |> Seq.head
-    | _ -> legalMoves |> Seq.head
+    match winningMoves |> Seq.any, loosingMoves |> Seq.any with
+    | true, _ -> winningMoves |> Seq.head
+    | _, true -> loosingMoves |> Seq.head
+//    | _ -> legalMoves |> Seq.head
+    | _ -> legalMoves |> Seq.random
