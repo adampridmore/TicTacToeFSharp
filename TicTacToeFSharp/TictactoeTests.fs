@@ -57,3 +57,7 @@ let ``Is draw ``() =
         [| Token(O);Token(O);Token(O)|] 
     |]
     |> isDraw |> should equal true
+
+[<Test>]
+let ``From position``()=
+   1 |> numberToPosition |> should equal {X=0;Y=0}

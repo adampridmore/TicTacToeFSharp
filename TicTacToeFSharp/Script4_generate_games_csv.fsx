@@ -1,8 +1,11 @@
 ﻿#load "SeqUtils.fs"
 #load "Tictactoe.fs"
 #load "TictactoeComputerPlayer.fs"
+#load "FileHelpers.fsx"
 
 open Tictactoe
+open FileHelpers
+
 
 let next game = 
     game 
@@ -24,17 +27,14 @@ let toCsvRow (game: Game) =
     let gameStateToString = 
         function 
         | XWon -> "X"
-        | OWon -> "Y"
+        | OWon -> "O"
         | Draw -> "D"
         | InProgress -> failwith "Invalid gate state"
 
     ([game.State |> gameStateToString] @ moveTextValues)
     |> Seq.reduce (sprintf "%s,%s")
 
-let writeLinesToFile lineCount (lines: seq<string>) = 
-    let filename = sprintf "tictactoe_1_%d.csv" lineCount
-    let pathAndFilename = System.IO.Path.Combine(__SOURCE_DIRECTORY__, filename)
-    
+let writeLinesToFile (lines: seq<string>) = 
     let linesToWrite = 
         if not <| System.IO.File.Exists pathAndFilename then 
             Seq.concat [[ "Result,1,2,3,4,5,6,7,8,9"  ]|> List.toSeq;lines]
@@ -42,12 +42,18 @@ let writeLinesToFile lineCount (lines: seq<string>) =
 
     System.IO.File.AppendAllLines(pathAndFilename, linesToWrite)
 
-let gamesToPlay = 1000000
+let saveSingleGame =  toCsvRow >> Seq.singleton >> writeLinesToFile 
+
+let gamesToPlay = 1000
 seq{
     for _ in 1..gamesToPlay do
         yield playGame()
 }
-|> Seq.map (fun game -> game |> toCsvRow)
-|> writeLinesToFile gamesToPlay
+|> Seq.map saveSingleGame
+|> Seq.last
+//|> Seq.last |> ignore
+//|> Seq.map (fun game -> game |> toCsvRow)
+//|> writeLinesToFile
+
 
 

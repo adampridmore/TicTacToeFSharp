@@ -63,13 +63,15 @@
     <Compile Include="Tictactoe.fs" />
     <Compile Include="TictactoeTests.fs" />
     <Compile Include="TictactoeComputerPlayer.fs" />
+    <None Include="FileHelpers.fsx" />
     <Compile Include="Program.fs" />
     <None Include="Script1.fsx" />
     <None Include="Script2.fsx" />
     <None Include="Script3.fsx" />
-    <None Include="Script4_generate_games_csv.fsx" />
+    <None Include="Script5_learn.fsx" />
     <None Include="App.config" />
     <Content Include="packages.config" />
+    <None Include="Script4_generate_games_csv.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Accord">

@@ -24,6 +24,11 @@ let emptyCells = Array.create 3 (Array.create 3 Empty)
 
 let positionToNumber (p:Position) = (p.X + (p.Y * 3)) + 1
 
+let numberToPosition (n:int) = 
+    let x = (n-1) % 3
+    let y = (n-1) / 3
+    {   X = x; Y = y }
+
 let tokenToggle = function | X -> O | O -> X
 
 let newGame = 
@@ -69,7 +74,11 @@ let private gameToString (game:Game) =
         | InProgress -> sprintf "%s to play" (game.NextMove |> tokenToString)
         | state ->  state |> gameStateToString
 
-    [game.State |> stateText ] @ [ game.Cells |> cellsToString ]
+    let previousMoves = 
+        game.PreviousMoves |> Seq.map positionToNumber |> Seq.map (sprintf "%d")
+        |> String.concat ","
+
+    [game.State |> stateText ] @ [ game.Cells |> cellsToString ] @ [previousMoves]
     |> String.concat "\r\n"
 
 let won (cells: Cell array array) = 
