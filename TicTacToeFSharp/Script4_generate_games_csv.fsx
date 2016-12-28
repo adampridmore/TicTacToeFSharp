@@ -31,21 +31,23 @@ let toCsvRow (game: Game) =
     ([game.State |> gameStateToString] @ moveTextValues)
     |> Seq.reduce (sprintf "%s,%s")
 
-let writeLinesToFile (lines: seq<string>) = 
-    let filename = System.IO.Path.Combine(__SOURCE_DIRECTORY__, "tictactoe_1.csv")
+let writeLinesToFile lineCount (lines: seq<string>) = 
+    let filename = sprintf "tictactoe_1_%d.csv" lineCount
+    let pathAndFilename = System.IO.Path.Combine(__SOURCE_DIRECTORY__, filename)
     
     let linesToWrite = 
-        if not <| System.IO.File.Exists filename then 
+        if not <| System.IO.File.Exists pathAndFilename then 
             Seq.concat [[ "Result,1,2,3,4,5,6,7,8,9"  ]|> List.toSeq;lines]
         else lines
 
-    System.IO.File.AppendAllLines(filename, linesToWrite)
+    System.IO.File.AppendAllLines(pathAndFilename, linesToWrite)
 
+let gamesToPlay = 1000000
 seq{
-    for _ in 1..1000 do
+    for _ in 1..gamesToPlay do
         yield playGame()
 }
 |> Seq.map (fun game -> game |> toCsvRow)
-|> writeLinesToFile
+|> writeLinesToFile gamesToPlay
 
 
