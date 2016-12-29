@@ -25,13 +25,7 @@ let rowToGame (line:string) =
         |> Seq.map numberToPosition
         |> Seq.toArray
 
-                
-    {
-        Game.State = gameState;
-        Game.Cells = emptyCells;
-        Game.PreviousMoves = previousMoves;
-        NextMove = X        
-    }
+    Seq.fold playMove newGame previousMoves
 
 let loadGames =
     if not (System.IO.File.Exists(pathAndFilename)) then failwith (sprintf "Filenot found %s" pathAndFilename)
@@ -40,6 +34,29 @@ let loadGames =
         |> Seq.skip 1
         |> Seq.map rowToGame
 
+//loadGames 
+////|> Seq.iter printGame
+//|> Seq.map (fun game -> (game.State,game.PreviousMoves.[0] |> positionToNumber) )
+//|> Seq.groupBy id
+//|> Seq.map (fun (g, games) -> (g, games |> Seq.length) )
+//|> Seq.sortBy (fun g -> g |> fst |> snd)
+//|> Seq.iter (printfn "%A")
+
+let playGameAndLearn (game: Game) =
+    let output = 
+        match (game.State) with
+        | XWon -> 1.0 
+        | OWon -> -1.0 
+        | Draw -> 0.0
+        | _ -> failwith "Invalid state"
+
+    let gameMoves = 
+        Seq.mapFold (fun game move -> (game, (playMove game move) )  ) newGame (game.PreviousMoves)
+        |> fst
+
+    let learn (gameState:Game) = ()
+                
+    gameMoves |> Seq.iter learn
+
 loadGames 
-|> Seq.head 
-|> printGame
+|> Seq.map playGameAndLearn
