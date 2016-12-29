@@ -53,10 +53,36 @@ let playGameAndLearn (game: Game) =
     let gameMoves = 
         Seq.mapFold (fun game move -> (game, (playMove game move) )  ) newGame (game.PreviousMoves)
         |> fst
+        |> Seq.filter (fun game -> game.NextMove = Token.X)
 
-    let learn (gameState:Game) = ()
-                
-    gameMoves |> Seq.iter learn
+    let gameToInputs (game:Game) =
+        let cellToInputValue (positiveValue:Cell) (c:Cell) = 
+            match c with
+            | x when x = positiveValue -> 1.0
+            | _ -> 0.0
 
-loadGames 
-|> Seq.map playGameAndLearn
+        let inputIndexToValue i =
+            match i with
+            | o when o < 9 -> 
+                let p = (o+1 |> numberToPosition)
+                game.Cells.[p.Y].[p.X] |> (cellToInputValue Cell.Empty)
+            | o when o >= 9 && o < 18 -> 
+                let p = (o+1-9 |> numberToPosition)
+                game.Cells.[p.Y].[p.X] |> (cellToInputValue (Cell.Token(Token.O) ) )
+            | o -> 
+                let p = (o+1-18 |> numberToPosition)
+                game.Cells.[p.Y].[p.X] |> (cellToInputValue (Cell.Token(Token.X) ) )
+
+        seq{0..(3*9-1)}
+        |> Seq.map inputIndexToValue
+
+    let learn (output: float) (inputs: seq<float>) = 
+        // Pass to ML engine.
+        ()
+
+    gameMoves 
+    |> Seq.map gameToInputs 
+    |> Seq.iter (learn output)
+
+loadGames |> Seq.head |> playGameAndLearn
+
