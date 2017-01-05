@@ -69,6 +69,7 @@
     <None Include="Script2.fsx" />
     <None Include="Script3.fsx" />
     <None Include="Script5_learn.fsx" />
+    <None Include="Script6_Accord.fsx" />
     <None Include="App.config" />
     <Content Include="packages.config" />
     <None Include="Script4_generate_games_csv.fsx" />
