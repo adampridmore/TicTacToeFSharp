@@ -3,9 +3,12 @@
 #load "TictactoeComputerPlayer.fs"
 #load "FileHelpers.fsx"
 
+
+#r @"..\packages\FSPowerPack.Parallel.Seq.Community.3.0.0.0\lib\Net40\FSharp.PowerPack.Parallel.Seq.dll"
+
 open Tictactoe
 open FileHelpers
-
+open Microsoft.FSharp.Collections
 
 let next game = 
     game 
@@ -41,6 +44,7 @@ let writeLinesToFile (lines: seq<string>) =
         else lines
 
     System.IO.File.AppendAllLines(pathAndFilename, linesToWrite)
+    
 
 let saveSingleGame =  toCsvRow >> Seq.singleton >> writeLinesToFile 
 
